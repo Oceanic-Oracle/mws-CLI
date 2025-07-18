@@ -1,0 +1,5 @@
+file:
+  format: yaml
+  path: ./data
+log:
+  level: debug
