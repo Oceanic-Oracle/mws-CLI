@@ -27,3 +27,6 @@
   ```bash
   docker run --rm mws -h
   ```
+
+## Тесты
+Находятся в файле ./cmd/commands/profile/profile_test.go
