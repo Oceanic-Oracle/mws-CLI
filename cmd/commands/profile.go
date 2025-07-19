@@ -5,7 +5,6 @@ import (
 	"simple-cli/cmd/commands/profile"
 	"simple-cli/internal/config"
 	profile_storage "simple-cli/internal/storage/profile"
-	profile_yaml "simple-cli/internal/storage/profile/yaml"
 
 	"github.com/spf13/cobra"
 )
@@ -21,14 +20,14 @@ func NewProfileCommand(cfg *config.Config, logger *slog.Logger) *ProfileCommand 
 			Use:   "profile",
 			Short: "Profile Management Commands",
 		},
-		Storage: profile_yaml.NewProfileStorage(cfg, logger),
+		Storage: profile_storage.NewProfileStorage(cfg, logger),
 	}
 
 	profileCommand.Cmd.AddCommand(
 		profile.NewCreateProfileCommand(logger, profileCommand.Storage).Cmd,
-		profile.NewDeleteProfileCommand(logger).Cmd,
-		profile.NewGetProfileCommand(logger).Cmd,
-		profile.NewListProfileCommand(logger).Cmd,
+		profile.NewDeleteProfileCommand(logger, profileCommand.Storage).Cmd,
+		profile.NewGetProfileCommand(logger, profileCommand.Storage).Cmd,
+		profile.NewListProfileCommand(logger, profileCommand.Storage).Cmd,
 	)
 
 	return profileCommand

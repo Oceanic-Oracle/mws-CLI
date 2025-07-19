@@ -1,6 +1,7 @@
 package profile
 
 import (
+	"fmt"
 	"log/slog"
 	"os"
 	profile_storage "simple-cli/internal/storage/profile"
@@ -43,8 +44,10 @@ func NewCreateProfileCommand(logger *slog.Logger, profileStorage profile_storage
 	return createProfileCommand
 }
 
+// createProfile создает новый профиль
 func createProfile(profileStorage profile_storage.IProfile, path, name, user, project string) {
 	if err := profileStorage.Create(path, name, user, project); err != nil {
+		fmt.Print(err)
 		os.Exit(1)
 	}
 }

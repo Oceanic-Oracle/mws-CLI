@@ -2,6 +2,7 @@ package profile
 
 import (
 	"log/slog"
+	profile_storage "simple-cli/internal/storage/profile"
 
 	"github.com/spf13/cobra"
 )
@@ -11,7 +12,7 @@ type ListProfileCommand struct {
 	Cmd    *cobra.Command
 }
 
-func NewListProfileCommand(logger *slog.Logger) *ListProfileCommand {
+func NewListProfileCommand(logger *slog.Logger, profileStorage profile_storage.IProfile) *ListProfileCommand {
 	listProfileCommand := &ListProfileCommand{
 		logger: logger,
 		Cmd: &cobra.Command{
@@ -26,5 +27,6 @@ func NewListProfileCommand(logger *slog.Logger) *ListProfileCommand {
 	return listProfileCommand
 }
 
+// listProfile выводит список профилей (экспортируемая для тестов)
 func listProfile() {
 }

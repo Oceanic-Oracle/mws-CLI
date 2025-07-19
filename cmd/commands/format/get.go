@@ -30,6 +30,7 @@ func NewGetFormatCommand(cfg *config.Config, logger *slog.Logger) *GetFormatComm
 	return getForGetFormatCommand
 }
 
+// getFormat выводит формат файлов (экспортируемая для тестов)
 func getFormat(cfg *config.Config) {
 	fmt.Println(cfg.File.Format)
 }

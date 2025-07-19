@@ -33,6 +33,7 @@ func NewSetFormatCommand(cfg *config.Config, logger *slog.Logger) *SetFormatComm
 	return setFormatCommand
 }
 
+// setFormat устанавливает новое расширения для файлов (экспортируемая для тестов)
 func setFormat(cfg *config.Config, format string) {
 	if cfg.IsDefault {
 		fmt.Println("Note: Using default configuration")
