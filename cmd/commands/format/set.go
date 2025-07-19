@@ -2,7 +2,9 @@ package format
 
 import (
 	"fmt"
+	"io"
 	"log/slog"
+	"os"
 	"simple-cli/internal/config"
 
 	"github.com/spf13/cobra"
@@ -23,7 +25,7 @@ func NewSetFormatCommand(cfg *config.Config, logger *slog.Logger) *SetFormatComm
 			Short: "Change file format",
 			Run: func(cmd *cobra.Command, args []string) {
 				format, _ := cmd.Flags().GetString("format")
-				setFormat(cfg, format)
+				setFormat(os.Stdout, cfg, format)
 			},
 		},
 	}
@@ -34,9 +36,10 @@ func NewSetFormatCommand(cfg *config.Config, logger *slog.Logger) *SetFormatComm
 }
 
 // setFormat устанавливает новое расширения для файлов (экспортируемая для тестов)
-func setFormat(cfg *config.Config, format string) {
+func setFormat(out io.Writer, cfg *config.Config, format string) {
 	if cfg.IsDefault {
-		fmt.Println("Note: Using default configuration")
+		fmt.Fprintf(out, "%s", "Note: Using default configuration")
+		return
 	}
 	
 	cfg.File.Format = format

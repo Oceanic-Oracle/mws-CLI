@@ -2,7 +2,9 @@ package format
 
 import (
 	"fmt"
+	"io"
 	"log/slog"
+	"os"
 	"simple-cli/internal/config"
 
 	"github.com/spf13/cobra"
@@ -22,7 +24,7 @@ func NewGetFormatCommand(cfg *config.Config, logger *slog.Logger) *GetFormatComm
 			Use:   "get",
 			Short: "Show current file format",
 			Run: func(cmd *cobra.Command, args []string) {
-				getFormat(cfg)
+				getFormat(os.Stdout, cfg)
 			},
 		},
 	}
@@ -31,6 +33,6 @@ func NewGetFormatCommand(cfg *config.Config, logger *slog.Logger) *GetFormatComm
 }
 
 // getFormat выводит формат файлов (экспортируемая для тестов)
-func getFormat(cfg *config.Config) {
-	fmt.Println(cfg.File.Format)
+func getFormat(out io.Writer, cfg *config.Config) {
+	fmt.Fprintf(out, "%s", cfg.File.Format)
 }

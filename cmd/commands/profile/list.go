@@ -2,6 +2,7 @@ package profile
 
 import (
 	"fmt"
+	"io"
 	"log/slog"
 	"os"
 	profile_storage "simple-cli/internal/storage/profile"
@@ -26,7 +27,7 @@ func NewListProfileCommand(logger *slog.Logger, profileStorage profile_storage.I
 					path = args[0]
 				}
 
-				listProfile(profileStorage, path)
+				ListProfile(os.Stdout, profileStorage, path)
 			},
 		},
 	}
@@ -34,12 +35,13 @@ func NewListProfileCommand(logger *slog.Logger, profileStorage profile_storage.I
 	return listProfileCommand
 }
 
-// listProfile выводит список профилей (экспортируемая для тестов)
-func listProfile(profileStorage profile_storage.IProfile, path string) {
+// ListProfile выводит список профилей (экспортируемая для тестов)
+func ListProfile(out io.Writer, profileStorage profile_storage.IProfile, path string) {
 	data, err := profileStorage.List(path)
 	if err != nil {
-		fmt.Println(err)
-		os.Exit(1)
+		fmt.Fprintf(out, "%v", err)
+		return
 	}
-	fmt.Print(data)
+
+	fmt.Fprintf(out, "%s", data)
 }

@@ -2,6 +2,7 @@ package profile
 
 import (
 	"fmt"
+	"io"
 	"log/slog"
 	"os"
 	profile_storage "simple-cli/internal/storage/profile"
@@ -31,7 +32,7 @@ func NewCreateProfileCommand(logger *slog.Logger, profileStorage profile_storage
 					path = args[0]
 				}
 
-				createProfile(profileStorage, path, name, user, project)
+				CreateProfile(os.Stdout, profileStorage, path, name, user, project)
 			},
 		},
 	}
@@ -44,10 +45,10 @@ func NewCreateProfileCommand(logger *slog.Logger, profileStorage profile_storage
 	return createProfileCommand
 }
 
-// createProfile создает новый профиль
-func createProfile(profileStorage profile_storage.IProfile, path, name, user, project string) {
+// CreateProfile создает новый профиль (экспортируемая для тестов)
+func CreateProfile(out io.Writer, profileStorage profile_storage.IProfile, path, name, user, project string) {
 	if err := profileStorage.Create(path, name, user, project); err != nil {
-		fmt.Print(err)
-		os.Exit(1)
+		fmt.Fprintf(out, "%v", err)
+		return
 	}
 }

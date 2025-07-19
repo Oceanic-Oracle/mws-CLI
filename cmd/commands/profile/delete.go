@@ -2,6 +2,7 @@ package profile
 
 import (
 	"fmt"
+	"io"
 	"log/slog"
 	"os"
 	profile_storage "simple-cli/internal/storage/profile"
@@ -28,7 +29,7 @@ func NewDeleteProfileCommand(logger *slog.Logger, profileStorage profile_storage
 					path = args[0]
 				}
 
-				deleteProfile(profileStorage, path, name)
+				DeleteProfile(os.Stdout, profileStorage, path, name)
 			},
 		},
 	}
@@ -39,10 +40,10 @@ func NewDeleteProfileCommand(logger *slog.Logger, profileStorage profile_storage
 	return deleteProfileCommand
 }
 
-// deleteProfile удаляет профиль (экспортируемая для тестов)
-func deleteProfile(profileStorage profile_storage.IProfile, path, name string) {
+// DeleteProfile удаляет профиль (экспортируемая для тестов)
+func DeleteProfile(out io.Writer, profileStorage profile_storage.IProfile, path, name string) {
 	if err := profileStorage.Delete(path, name); err != nil {
-		fmt.Print(err)
-		os.Exit(1)
+		fmt.Fprintf(out, "%v", err)
+		return
 	}
 }

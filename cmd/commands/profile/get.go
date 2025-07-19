@@ -2,6 +2,7 @@ package profile
 
 import (
 	"fmt"
+	"io"
 	"log/slog"
 	"os"
 	profile_storage "simple-cli/internal/storage/profile"
@@ -28,7 +29,7 @@ func NewGetProfileCommand(logger *slog.Logger, profileStorage profile_storage.IP
 					path = args[0]
 				}
 
-				getProfile(profileStorage, path, name)
+				GetProfile(os.Stdout, profileStorage, path, name)
 			},
 		},
 	}
@@ -39,13 +40,13 @@ func NewGetProfileCommand(logger *slog.Logger, profileStorage profile_storage.IP
 	return getProfileCommand
 }
 
-// getProfile выводит содержимое профиля (экспортируемая для тестов)
-func getProfile(profileStorage profile_storage.IProfile, path, name string) {
+// GetProfile выводит содержимое профиля (экспортируемая для тестов)
+func GetProfile(out io.Writer, profileStorage profile_storage.IProfile, path, name string) {
 	data, err := profileStorage.Get(path, name)
 	if err != nil {
-		fmt.Print(err)
-		os.Exit(1)
+		fmt.Fprintf(out, "%v", err)
+		return
 	}
 
-	fmt.Print(data)
+	fmt.Fprintf(out, "%s", data)
 }

@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"log/slog"
 	"os"
-	"path"
 	"path/filepath"
 	"simple-cli/internal/config"
 	"strings"
@@ -22,7 +21,7 @@ func (ps *profileStorage) Create(outPath, name, user, project string) error {
 		outPath = ps.cfg.File.Path
 	}
 
-	filePath := path.Join(outPath, fmt.Sprintf("%s.%s", name, ps.cfg.File.Format))
+	filePath := filepath.Join(outPath, fmt.Sprintf("%s.%s", name, ps.cfg.File.Format))
 
 	if _, err := os.Stat(filePath); err == nil {
 		return fmt.Errorf("profile file '%s' already exists", filePath)
@@ -59,8 +58,9 @@ func (ps *profileStorage) Delete(outPath, name string) error {
 		outPath = ps.cfg.File.Path
 	}
 
-	if err := os.Remove(path.Join(outPath, fmt.Sprintf("%s.%s", name, ps.cfg.File.Format))); err != nil {
-		return fmt.Errorf("failed to delete profile file: %w", err)
+	filePath := filepath.Join(outPath, fmt.Sprintf("%s.%s", name, ps.cfg.File.Format))
+	if err := os.Remove(filePath); err != nil {
+		return fmt.Errorf("failed to delete profile file: %s", filePath)
 	}
 
 	return nil
@@ -71,7 +71,7 @@ func (ps *profileStorage) Get(outPath, name string) (string, error) {
 		outPath = ps.cfg.File.Path
 	}
 
-	data, err := os.ReadFile(path.Join(outPath, fmt.Sprintf("%s.%s", name, ps.cfg.File.Format)))
+	data, err := os.ReadFile(filepath.Join(outPath, fmt.Sprintf("%s.%s", name, ps.cfg.File.Format)))
 	if err != nil {
 		return "", fmt.Errorf("failed to read profile file: %w", err)
 	}
