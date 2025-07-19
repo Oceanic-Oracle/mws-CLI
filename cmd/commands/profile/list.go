@@ -1,7 +1,9 @@
 package profile
 
 import (
+	"fmt"
 	"log/slog"
+	"os"
 	profile_storage "simple-cli/internal/storage/profile"
 
 	"github.com/spf13/cobra"
@@ -19,7 +21,12 @@ func NewListProfileCommand(logger *slog.Logger, profileStorage profile_storage.I
 			Use:   "list",
 			Short: "List all available profiles",
 			Run: func(cmd *cobra.Command, args []string) {
-				listProfile()
+				var path string
+				if len(args) > 0 {
+					path = args[0]
+				}
+
+				listProfile(profileStorage, path)
 			},
 		},
 	}
@@ -28,5 +35,11 @@ func NewListProfileCommand(logger *slog.Logger, profileStorage profile_storage.I
 }
 
 // listProfile выводит список профилей (экспортируемая для тестов)
-func listProfile() {
+func listProfile(profileStorage profile_storage.IProfile, path string) {
+	data, err := profileStorage.List(path)
+	if err != nil {
+		fmt.Println(err)
+		os.Exit(1)
+	}
+	fmt.Print(data)
 }
